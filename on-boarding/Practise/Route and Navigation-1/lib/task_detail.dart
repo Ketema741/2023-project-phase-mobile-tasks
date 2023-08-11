@@ -1,47 +1,16 @@
 import 'package:flutter/material.dart';
 
-class TaskDetail extends StatelessWidget {
-  final Task task;
+class DetailScreen extends StatefulWidget {
 
-  const TaskDetail({required this.task, Key? key}) : super(key: key);
+  // ignore: prefer_typing_uninitialized_variables
+  final task;
+  const DetailScreen({Key? key, this.task}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final task = ModalRoute.of(context)?.settings.arguments as Task;
+  State<DetailScreen> createState() => _DetailScreenState();
+}
 
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20.0),
-            _buildHeader(context),
-            const SizedBox(height: 10.0),
-            _buildTaskImage(task.imageUrl),
-            const SizedBox(height: 20.0),
-            _buildDetailContainer(
-              title: 'Title',
-              detail: task.title,
-            ),
-            const SizedBox(height: 10.0),
-            _buildDetailContainer(
-              title: 'Description',
-              detail: task.taskText,
-              containerHeight: 100, // Longer height for description
-            ),
-            const SizedBox(height: 10.0),
-            _buildDetailContainer(
-              title: 'Deadline',
-              detail: task.dateText,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
+class _DetailScreenState extends State<DetailScreen> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -125,17 +94,82 @@ class TaskDetail extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildCreateTaskButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () async {
+            // final newTask =
+            //     await Navigator.of(context).pushNamed('/create-task');
+            // if (newTask != null && newTask is Task) {
+            //   setState(() {
+            //     tasks.add(newTask);
+            //   });
+            //   // Add the new task to the tasks list
+            // }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFEE6F57),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            minimumSize: const Size(250, 50),
+          ),
+          child: const Text(
+            'Edit Task',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 15.0),
+              _buildHeader(context),
+              const SizedBox(height: 10.0),
+              _buildTaskImage("images/task_detail.jpeg"),
+              const SizedBox(height: 20.0),
+              _buildDetailContainer(
+                title: 'Title',
+                detail: widget.task.titleText,
+              ),
+              const SizedBox(height: 10.0),
+              _buildDetailContainer(
+                title: 'Description',
+                detail: widget.task.descriptionText,
+                containerHeight: 80, // Longer height for description
+              ),
+              const SizedBox(height: 10.0),
+              _buildDetailContainer(
+                title: 'Deadline',
+                detail: widget.task.dateText,
+              ),
+              _buildCreateTaskButton(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class Task {
-  final String iconText;
-  final String taskText;
-  final String dateText;
-  final Color dividerColor;
-  final String imageUrl;
-  final String title;
-  final String description;
-
   Task({
     required this.iconText,
     required this.taskText,
@@ -144,5 +178,16 @@ class Task {
     required this.imageUrl,
     required this.title,
     required this.description,
+    required String descriptionText,
+    required String titleText,
+    required MaterialColor taskColor,
   });
+
+  final String dateText;
+  final String description;
+  final Color dividerColor;
+  final String iconText;
+  final String imageUrl;
+  final String taskText;
+  final String title;
 }

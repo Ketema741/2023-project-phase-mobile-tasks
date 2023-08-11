@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:layout_basics/create_task.dart';
+import 'package:layout_basics/edit_screen.dart';
 import 'package:layout_basics/task_detail.dart';
 import 'package:layout_basics/todo_list.dart';
 
@@ -15,10 +16,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
+      onGenerateRoute: (settings) {
+        if (settings.name == '/task-detail') {
+          final task = settings.arguments;
+          return MaterialPageRoute(builder: (context) =>  DetailScreen(task: task));
+        }
+        if (settings.name == '/edit-task') {
+          final task = settings.arguments;
+          return MaterialPageRoute(builder: (context) =>  EditTask(task: task));
+        }
+        // You can return different routes or handle unknown routes as needed.
+        return null;
+      },
       routes: {
         '/': (context) => const MyHomePage(),
         '/todo-list': (context) => const TodoList(),
-        '/task-detail': (context) => TaskDetail(task: ModalRoute.of(context)?.settings.arguments as Task),
         '/create-task': (context) => CreateTask(),
       },
     );
@@ -31,7 +43,6 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       backgroundColor: const Color(0xFFEE6F57),
       body: Column(
         children: [

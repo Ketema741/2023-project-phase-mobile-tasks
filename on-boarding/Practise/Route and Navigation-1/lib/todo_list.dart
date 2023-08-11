@@ -15,6 +15,7 @@ class _TodoListState extends State<TodoList> {
       titleText: 'UI/UX APP Design',
       descriptionText: 'UI/UX APP Design',
       dateText: 'April, 29, 2023',
+      taskId: '1',
       taskColor: Colors.red,
     ),
     Task(
@@ -22,9 +23,12 @@ class _TodoListState extends State<TodoList> {
       titleText: 'Project Planning',
       descriptionText: 'UI/UX APP Design',
       dateText: 'May, 15, 2023',
+      taskId: '2',
       taskColor: Colors.green,
     ),
   ];
+
+  Map<int, bool> showIconsMap = {}; // Map to track showIcons for each task
 
   @override
   Widget build(BuildContext context) {
@@ -106,25 +110,32 @@ class _TodoListState extends State<TodoList> {
         itemCount: tasks.length,
         separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemBuilder: (context, index) {
-          return _buildTaskItem(tasks[index]);
+          return _buildTaskItem(tasks[index], index);
         },
       ),
     );
   }
 
-  Widget _buildTaskItem(Task task) {
+  bool isExpanded = false;
+  Widget _buildTaskItem(Task task, int index) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/task-detail', arguments: task);
+        setState(() {
+          showIconsMap[index] = !(showIconsMap[index] ?? false);
+        });
+        setState(() {
+          isExpanded = !isExpanded;
+        });
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: const Color.fromARGB(255, 63, 59, 59).withOpacity(0.09),
           ),
         ),
-        height: 70,
+        height: isExpanded ? 120 : 90, // Adjust the expanded height as needed
         padding: const EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,6 +144,44 @@ class _TodoListState extends State<TodoList> {
             _buildTaskInfo(task.iconText, task.titleText),
             const SizedBox(width: 20),
             _buildDateInfo(task.dateText, task.taskColor),
+            if (showIconsMap[index] ?? false)
+              Stack(
+                children: [
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          final editedTask = await Navigator.pushNamed(
+                              context, '/edit-task',
+                              arguments: task);
+
+                          if (editedTask != null && editedTask is Task) {
+                            setState(() {
+                              // Find the task in the tasks list and update it
+                              int indexOfTask = tasks.indexWhere(
+                                  (task) => task.taskId == editedTask.taskId);
+                              if (indexOfTask != -1) {
+                                debugPrint("here");
+                                tasks[indexOfTask] = editedTask;
+                              } else {
+                                debugPrint("not ear");
+                              }
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/task-detail',
+                              arguments: task);
+                        },
+                        icon: const Icon(Icons.more_vert),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
           ],
         ),
       ),

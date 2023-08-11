@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:layout_basics/models/task_model.dart';
 
 // ignore: must_be_immutable
-class CreateTask extends StatelessWidget {
-  CreateTask({super.key, Object? task});
+class EditTask extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
+  final task;
+
   TextEditingController taskTitleController = TextEditingController();
   TextEditingController dueDateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-
+  EditTask({required this.task, Key? key})
+      : taskTitleController = TextEditingController(text: task.titleText),
+        dueDateController = TextEditingController(text: task.dateText),
+        descriptionController =
+            TextEditingController(text: task.descriptionText),
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +30,7 @@ class CreateTask extends StatelessWidget {
 
             const Center(
               child: Text(
-                "Create New Task",
+                "Edit Task",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -43,7 +50,7 @@ class CreateTask extends StatelessWidget {
             const SizedBox(height: 30.0),
 
             // read user input
-            _buildTaskInput(),
+            _buildTaskInput(task),
 
             const SizedBox(height: 10.0),
 
@@ -78,7 +85,7 @@ class CreateTask extends StatelessWidget {
     );
   }
 
-  Container _buildTaskInput() {
+  Container _buildTaskInput(task) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -98,7 +105,6 @@ class CreateTask extends StatelessWidget {
           TextField(
             controller: taskTitleController,
             decoration: InputDecoration(
-              hintText: 'UI/UX app Design',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -132,7 +138,6 @@ class CreateTask extends StatelessWidget {
           TextField(
             controller: dueDateController,
             decoration: InputDecoration(
-              hintText: 'April 29,2023 12:30 AM',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -170,8 +175,6 @@ class CreateTask extends StatelessWidget {
             controller: descriptionController,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText:
-                  'First I have to animate the logo and later prototyping my design. It\'s very importand',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15.0),
               ),
@@ -214,6 +217,7 @@ class CreateTask extends StatelessWidget {
                   descriptionText: description,
                   dateText: dueDate,
                   taskId: taskTitle,
+
                   taskColor:
                       Colors.grey, // Set default color or specify as needed
                 );
@@ -230,7 +234,7 @@ class CreateTask extends StatelessWidget {
               minimumSize: const Size(180, 50), // Adjust the size
             ),
             child: const Text(
-              'Add Task',
+              'Update Task',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 20.0,
