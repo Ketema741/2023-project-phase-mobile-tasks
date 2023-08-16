@@ -1,5 +1,6 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:layout_basics/core/platform/network_info.dart';
+import 'package:layout_basics/core/network/network_info.dart';
 import 'package:layout_basics/features/todo/data/datasources/local_data_source.dart';
 import 'package:layout_basics/features/todo/data/datasources/remote_data_source.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
@@ -50,8 +51,8 @@ void main() {
     });
   }
 
-  group('getConcreteNumberTrivia', () {
-    const tNumber = 1;
+  group('getTask', () {
+    const tNumber = "2";
     const tTaskModel =
         TaskModel(
       iconText: 'P',
@@ -68,7 +69,7 @@ void main() {
         // arrange
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
         // act
-        repository.getTask(tNumber as String);
+        repository.getTask(tNumber);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -79,13 +80,13 @@ void main() {
         'should return remote data when the call to remote data source is successful',
         () async {
           // arrange
-          when(mockRemoteDataSource.getTasks())
+          when(mockRemoteDataSource.getTask(tNumber))
               .thenAnswer((_) async => tTaskModel);
           // act
           final result = await repository.getTask(tNumber);
           // assert
           verify(mockRemoteDataSource.getTask(tNumber));
-          expect(result, equals(Right(tTask)));
+          expect(result, equals(const Right(tTask)));
         },
       );
 
@@ -248,8 +249,8 @@ void main() {
   //         verifyZeroInteractions(mockRemoteDataSource);
   //         verify(mockLocalDataSource.getLastNumberTrivia());
   //         expect(result, equals(Left(CacheFailure())));
-  //       },
-  //     );
-  //   });
+        },
+      );
+    });
   });
 }

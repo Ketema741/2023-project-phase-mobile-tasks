@@ -4,7 +4,7 @@ import 'package:layout_basics/features/todo/domain/repositories/task_repository.
 import 'package:layout_basics/features/todo/data/datasources/local_data_source.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../core/platform/network_info.dart';
+import '../../../../core/network/network_info.dart';
 import '../datasources/remote_data_source.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
@@ -16,29 +16,27 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<Either<Failure, List<TaskModel>>> getTasks() async {
-    List<TaskModel> tasks = await localDataSource.getTasks();
-
-    try {
+    if (await networkInfo.isConnected) { // Check network connectivity
+      List<TaskModel> tasks = await remoteDataSource.getTasks();
       return Right(tasks);
-    } catch (e) {
-      return const Left(DatabaseFailure("Database failure"));
+    } else {
+      return const Left(ConnectionFailure("No network connection")); // Handle network failure
     }
   }
-
+  
   @override
   Future<Either<Failure, TaskModel>> getTask(String id) async {
-    TaskModel task = await localDataSource.getTask(id);
-
-    try {
+    if (await networkInfo.isConnected) { // Check network connectivity
+      TaskModel task = await remoteDataSource.getTask(id);
       return Right(task);
-    } catch (e) {
-      return const Left(DatabaseFailure("Database failure"));
+    } else {
+      return const Left(ConnectionFailure("No network connection")); // Handle network failure
     }
   }
 
   @override
   Future<Either<Failure, TaskModel>> addTask(TaskModel newTask) async {
-    TaskModel result = await localDataSource.addTask(newTask);
+    TaskModel result = await remoteDataSource.addTask(newTask);
     try {
       return Right(result);
     } catch (e) {
@@ -48,7 +46,7 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<Either<Failure, TaskModel>> updateTask(TaskModel task) async {
-    TaskModel result = await localDataSource.updateTask(task);
+    TaskModel result = await remoteDataSource.updateTask(task);
     try {
       return Right(result);
     } catch (e) {
@@ -58,7 +56,7 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   Future<Either<Failure, TaskModel>> deleteTask(TaskModel task) async {
-    TaskModel result = await localDataSource.deleteTask(task);
+    TaskModel result = await remoteDataSource.deleteTask(task);
     try {
       return Right(result);
     } catch (e) {
