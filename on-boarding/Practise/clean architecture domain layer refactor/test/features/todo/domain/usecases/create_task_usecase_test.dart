@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:layout_basics/core/usecase/usecase.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
 import 'package:layout_basics/features/todo/domain/usecases/create_task.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../helpers/test_helper.mocks.dart';
+import '../../../../fixtures/test_helper.mocks.dart';
 
 void main() {
   late CreateTaskUseCase usecase;
@@ -28,7 +29,7 @@ void main() {
     'should add task to the repository',
     () async {
       // Arrange
-      when(mockTaskRepository.addTask(tTask))
+      when(mockTaskRepository.createTask(tTask))
           .thenAnswer((_) async => Right(tTask)); // Return a TaskModel
 
       // Act

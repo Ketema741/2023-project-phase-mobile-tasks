@@ -5,5 +5,5 @@ abstract class RemoteDataSource {
   Future<TaskModel> getTask(String id);
   Future<TaskModel> addTask(TaskModel task);
   Future<TaskModel> updateTask(TaskModel task);
-  Future<TaskModel> deleteTask(TaskModel task);
+  Future<String> deleteTask(String id);
 }

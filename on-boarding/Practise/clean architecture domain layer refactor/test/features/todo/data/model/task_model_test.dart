@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
 import 'package:layout_basics/features/todo/domain/entities/task.dart';
 
-import '../../../../helpers/read_json.dart';
+import '../../../../fixtures/read_json.dart';
 
 void main() {
   const testTaskModel = TaskModel(
@@ -28,7 +28,7 @@ void main() {
       // Arrange
 
       final Map<String, dynamic> jsonMap = json.decode(
-        readJson("helpers/dummy_data/dummy_task_response.json"),
+        fixture("/dummy_task_response.json"),
       );
       // Act
       final result = TaskModel.fromJson(jsonMap);
@@ -39,7 +39,7 @@ void main() {
   );
 
   test(
-    'should valid json',
+    'should return valid json',
     () async {
       // Act
       final result = testTaskModel.toJson();

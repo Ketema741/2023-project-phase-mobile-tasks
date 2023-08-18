@@ -1,69 +1,62 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import '../models/task_model.dart';
 
 abstract class LocalDataSource {
   Future<List<TaskModel>> getTasks();
-  Future<TaskModel> getTask(String id);
-  Future<TaskModel> addTask(TaskModel task);
+  Future<TaskModel?> getTask(String id);
+  Future<TaskModel> createTask(TaskModel task);
   Future<TaskModel> updateTask(TaskModel task);
-  Future<TaskModel> deleteTask(TaskModel task);
+  Future<String> deleteTask(String id);
 
-  // Future<void> cacheTask(TaskModel taskToCache);
+  Future<bool> storeTasks(List<TaskModel> tasks);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
-  List<TaskModel> tasks = [
-    const TaskModel(
-      iconText: 'U',
-      titleText: 'UI/UX APP Design',
-      descriptionText: 'UI/UX APP Design',
-      dateText: 'April, 29, 2023',
-      taskId: '1',
-    ),
-    const TaskModel(
-      iconText: 'P',
-      titleText: 'Project Planning',
-      descriptionText: 'UI/UX APP Design',
-      dateText: 'May, 15, 2023',
-      taskId: '2',
-    ),
-  ];
+  final SharedPreferences sharedPreferences;
+
+  LocalDataSourceImpl({required this.sharedPreferences});
 
   @override
   Future<List<TaskModel>> getTasks() async {
-    return tasks;
-  }
-
-  @override
-  Future<TaskModel> getTask(String id) async {
-    TaskModel foundTask = const TaskModel(
-      iconText: '',
-      titleText: 'No title',
-      descriptionText: 'no description',
-      dateText: 'no due date',
-      taskId: '',
-    );
-
-    for (var task in tasks) {
-      if (task.taskId == id) {
-        foundTask = task;
-        break;
-      }
+    final tasksString = sharedPreferences.getString('CACHED_TASK');
+    if (tasksString != null) {
+      final tasksJson = jsonDecode(tasksString) as List<dynamic>;
+      return tasksJson.map((taskJson) => TaskModel.fromJson(taskJson)).toList();
+    } else {
+      return [];
     }
-
-    return foundTask;
   }
 
+ @override
+Future<TaskModel?> getTask(String id) async {
+  final tasks = await getTasks();
+
+  for (var task in tasks) {
+    if (task.taskId == id) {
+      return task; // Return the found task
+    }
+  }
+
+  return null; // Return null if no task is found
+}
+
+
   @override
-  Future<TaskModel> addTask(TaskModel task) async {
+  Future<TaskModel> createTask(TaskModel task) async {
+    final tasks = await getTasks();
     tasks.add(task);
+    await storeTasks(tasks);
     return task;
   }
 
   @override
   Future<TaskModel> updateTask(TaskModel task) async {
+    final tasks = await getTasks();
     final index = tasks.indexWhere((t) => t.taskId == task.taskId);
     if (index != -1) {
       tasks[index] = task;
+      await storeTasks(tasks);
       return task;
     }
 
@@ -71,8 +64,22 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<TaskModel> deleteTask(TaskModel task) async {
-    tasks.removeWhere((t) => t.taskId == task.taskId);
-    return task;
+  Future<String> deleteTask(String id) async {
+    final tasks = await getTasks();
+    tasks.removeWhere((t) => t.taskId == id);
+    await storeTasks(tasks);
+    return "Task removed successfully";
+  }
+
+  @override
+  Future<bool> storeTasks(List<TaskModel> tasks) async {
+    try {
+      final tasksJson = tasks.map((task) => task.toJson()).toList();
+      final tasksString = json.encode(tasksJson);
+      await sharedPreferences.setString('CACHED_TASK', tasksString);
+      return true; // Return true if storing is successful
+    } catch (e) {
+      return false; // Return false if an error occurs during storing
+    }
   }
 }

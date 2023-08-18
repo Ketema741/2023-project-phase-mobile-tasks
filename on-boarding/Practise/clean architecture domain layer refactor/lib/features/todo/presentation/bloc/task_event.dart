@@ -17,9 +17,14 @@ class LoadTask extends TaskEvent {
   const LoadTask({required this.id});
 }
 
-class AddTask extends TaskEvent {
+class LoadTaskSingle extends TaskEvent {
+  final String id;
+  const LoadTaskSingle({required this.id, required TaskModel task});
+}
+
+class CreateTask extends TaskEvent {
   final TaskModel task;
-  const AddTask({required this.task, required String id});
+  const CreateTask({required this.task});
 }
 
 class UpdateTask extends TaskEvent {
@@ -28,6 +33,6 @@ class UpdateTask extends TaskEvent {
 }
 
 class DeleteTask extends TaskEvent {
-  final TaskModel task;
-  const DeleteTask({required this.task});
+  final String id;
+  const DeleteTask({required this.id});
 }

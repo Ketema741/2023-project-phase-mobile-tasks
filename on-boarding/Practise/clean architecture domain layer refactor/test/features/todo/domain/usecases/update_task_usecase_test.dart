@@ -7,7 +7,7 @@ import 'package:layout_basics/features/todo/data/models/task_model.dart';
 import 'package:layout_basics/features/todo/domain/usecases/update_task.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../helpers/test_helper.mocks.dart';
+import '../../../../fixtures/test_helper.mocks.dart';
 
 void main() {
   late UpdateTaskUseCase usecase;

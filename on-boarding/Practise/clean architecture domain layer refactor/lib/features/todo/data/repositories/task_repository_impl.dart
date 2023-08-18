@@ -35,7 +35,7 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, TaskModel>> addTask(TaskModel newTask) async {
+  Future<Either<Failure, TaskModel>> createTask(TaskModel newTask) async {
     TaskModel result = await remoteDataSource.addTask(newTask);
     try {
       return Right(result);
@@ -55,8 +55,8 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, TaskModel>> deleteTask(TaskModel task) async {
-    TaskModel result = await remoteDataSource.deleteTask(task);
+  Future<Either<Failure, String>> deleteTask(String id) async {
+    String result = await remoteDataSource.deleteTask(id);
     try {
       return Right(result);
     } catch (e) {

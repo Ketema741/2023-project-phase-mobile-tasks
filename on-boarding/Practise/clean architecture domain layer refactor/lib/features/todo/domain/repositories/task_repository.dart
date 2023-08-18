@@ -9,7 +9,7 @@ abstract class TaskRepository {
 
   Future<Either<Failure, TaskModel>> updateTask(TaskModel task);
 
-  Future<Either<Failure, TaskModel>> deleteTask(TaskModel task);
+  Future<Either<Failure, String>> deleteTask(String id);
 
-  Future<Either<Failure, TaskModel>> addTask(TaskModel newTask);
+  Future<Either<Failure, TaskModel>> createTask(TaskModel newTask);
 }

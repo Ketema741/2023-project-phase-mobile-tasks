@@ -4,7 +4,7 @@ const String serverFailureMessage = 'Server Failure';
 const String cacheFailureMessage = 'Cache Failure';
 const String invalidInputFailureMessage =
     'Invalid Input - The number must be a positive integer or zero.';
-    
+
 sealed class TaskState extends Equatable {
   const TaskState();
 
@@ -22,9 +22,37 @@ final class TaskLoaded extends TaskState {
   List<Object> get props => [tasks];
 }
 
-final class Error extends TaskState {
+final class TaskLoadedSingle extends TaskState {
+  final String id;
+  const TaskLoadedSingle({this.id = "1"});
+
+  @override
+  List<Object> get props => [id];
+}
+
+class TaskCreated extends TaskState {
+  final TaskModel task;
+
+  const TaskCreated({required this.task});
+
+  @override
+  List<Object> get props => [task];
+}
+
+class TaskDeleted extends TaskState {}
+class TaskUpdated extends TaskState {
+  final TaskModel updatedTask;
+
+  const TaskUpdated({required this.updatedTask});
+
+  @override
+  List<Object> get props => [updatedTask];
+}
+
+
+final class TaskError extends TaskState {
   final String message;
-  const Error({this.message = "Error message"});
+  const TaskError(String mapFailureToMessage, {this.message = "Error message"});
 
   @override
   List<Object> get props => [message];

@@ -43,4 +43,12 @@ class UpdateTaskParams extends Equatable {
   @override
   List<Object?> get props => [task];
 }
+class DeleteTaskParams extends Equatable {
+  final String id;
+
+  const DeleteTaskParams({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
 
