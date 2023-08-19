@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
 
 // ignore: must_be_immutable
-class CreateTask extends StatelessWidget {
-  CreateTask({super.key, Object? task});
+class CreateTaskPage extends StatelessWidget {
+  CreateTaskPage({super.key, Object? task});
   TextEditingController taskTitleController = TextEditingController();
   TextEditingController dueDateController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
