@@ -92,35 +92,37 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
   }
 
-FutureOr<void> _onDeleteTask(DeleteTask event, Emitter<TaskState> emit) async {
-  emit(TaskLoading()); // Emit loading state
+  FutureOr<void> _onDeleteTask(
+      DeleteTask event, Emitter<TaskState> emit) async {
+    emit(TaskLoading()); // Emit loading state
 
-  final deleteEither = await deleteTask(DeleteTaskParams(id: event.id));
+    final deleteEither = await deleteTask(DeleteTaskParams(id: event.id));
 
-  deleteEither.fold(
-    (failure) {
-      final errorMessage = mapFailureToMessage(failure);
-      emit(TaskError(errorMessage)); // Emit error state
-    },
-    (_) {
-      emit(TaskDeleted()); // Emit success state indicating task deletion
-    },
-  );
-}
+    deleteEither.fold(
+      (failure) {
+        final errorMessage = mapFailureToMessage(failure);
+        emit(TaskError(errorMessage)); // Emit error state
+      },
+      (_) {
+        emit(TaskDeleted()); // Emit success state indicating task deletion
+      },
+    );
+  }
 
-FutureOr<void> _onUpdateTask(UpdateTask event, Emitter<TaskState> emit) async {
-  final updateEither = await updateTask(UpdateTaskParams(task: event.task));
+  FutureOr<void> _onUpdateTask(
+      UpdateTask event, Emitter<TaskState> emit) async {
+    final updateEither = await updateTask(UpdateTaskParams(task: event.task));
 
-  updateEither.fold(
-    (failure) {
-      final errorMessage = mapFailureToMessage(failure);
-      emit(TaskError(errorMessage)); // Emit failure state
-    },
-    (_) {
-      emit(TaskUpdated(updatedTask: event.task)); // Emit success state
-    },
-  );
-}
+    updateEither.fold(
+      (failure) {
+        final errorMessage = mapFailureToMessage(failure);
+        emit(TaskError(errorMessage)); // Emit failure state
+      },
+      (_) {
+        emit(TaskUpdated(updatedTask: event.task)); // Emit success state
+      },
+    );
+  }
 
   String mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

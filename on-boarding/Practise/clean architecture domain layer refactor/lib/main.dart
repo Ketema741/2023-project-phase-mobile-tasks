@@ -12,41 +12,40 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Initialize the binding
   await di.init(); // Call the setupLocator function to register dependencies
   runApp(
-    BlocProvider<TaskBloc>(
-      create: (context) => di.sl<TaskBloc>(), // Provide the TaskBloc instance
-      child: const TaskApp(),
-    ),
+    const TaskApp(),
   );
 }
-
 
 class TaskApp extends StatelessWidget {
   const TaskApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: "/",
-      onGenerateRoute: (settings) {
-        if (settings.name == '/task-detail') {
-          final task = settings.arguments;
-          return MaterialPageRoute(
-              builder: (context) => DetailScreen(task: task));
-        }
-        if (settings.name == '/edit-task') {
-          final task = settings.arguments;
-          return MaterialPageRoute(builder: (context) => EditTask(task: task));
-        }
-        // You can return different routes or handle unknown routes as needed.
-        return null;
-      },
-      routes: {
-        '/': (context) => const HomePage(),
-        '/todo-list': (context) => const TodoList(),
-        '/create-task': (context) => CreateTaskPage(),
-      },
+    return BlocProvider<TaskBloc>(
+      create: (context) => di.sl<TaskBloc>(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: "/",
+        onGenerateRoute: (settings) {
+          if (settings.name == '/task-detail') {
+            final task = settings.arguments;
+            return MaterialPageRoute(
+                builder: (context) => DetailScreen(task: task));
+          }
+          if (settings.name == '/edit-task') {
+            final task = settings.arguments;
+            return MaterialPageRoute(
+                builder: (context) => EditTask(task: task));
+          }
+          // You can return different routes or handle unknown routes as needed.
+          return null;
+        },
+        routes: {
+          '/': (context) => const HomePage(),
+          '/todo-list': (context) =>  TodoList(),
+          '/create-task': (context) => CreateTaskPage(),
+        },
+      ),
     );
   }
 }
-

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
+
+import '../bloc/task_bloc.dart';
 
 // ignore: must_be_immutable
 class CreateTaskPage extends StatelessWidget {
@@ -97,7 +100,6 @@ class CreateTaskPage extends StatelessWidget {
           ),
           TextField(
             key: const Key("taskName"),
-
             controller: taskTitleController,
             decoration: InputDecoration(
               hintText: 'UI/UX app Design',
@@ -133,7 +135,6 @@ class CreateTaskPage extends StatelessWidget {
           ),
           TextField(
             key: const Key("dueDate"),
-
             controller: dueDateController,
             decoration: InputDecoration(
               hintText: 'April 29,2023 12:30 AM',
@@ -172,7 +173,6 @@ class CreateTaskPage extends StatelessWidget {
           ),
           TextField(
             key: const Key("description"),
-
             controller: descriptionController,
             maxLines: 3,
             decoration: InputDecoration(
@@ -196,56 +196,72 @@ class CreateTaskPage extends StatelessWidget {
     );
   }
 
-  Container _buildAddTaskButton(
+  BlocConsumer<TaskBloc, TaskState> _buildAddTaskButton(
     BuildContext context,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            key: const Key("addButton"),
-            onPressed: () {
-              // Retrieve user input
-              String taskTitle = taskTitleController.text;
-              String dueDate = dueDateController.text;
-              String description = descriptionController.text;
-              if (taskTitle.isNotEmpty &&
-                  dueDate.isNotEmpty &&
-                  description.isNotEmpty) {
-                String iconText = taskTitle[0];
-                TaskModel newTask = TaskModel(
-                  iconText: iconText, // You can set appropriate values here
-                  titleText: taskTitle,
-                  descriptionText: description,
-                  dateText: dueDate,
-                  taskId: taskTitle,
-                  taskColor:
-                      Colors.grey, // Set default color or specify as needed
-                );
+    return BlocConsumer<TaskBloc, TaskState>(
+      listener: (context, state) {
+        // implement listener
+      },
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                key: const Key("addButton"),
+                onPressed: () {
+                  // Retrieve user input
+                  String taskTitle = taskTitleController.text;
+                  String dueDate = dueDateController.text;
+                  String description = descriptionController.text;
+                  if (taskTitle.isNotEmpty &&
+                      dueDate.isNotEmpty &&
+                      description.isNotEmpty) {
+                    String iconText = taskTitle[0];
+                    TaskModel newTask = TaskModel(
+                      iconText: iconText, // You can set appropriate values here
+                      titleText: taskTitle,
+                      descriptionText: description,
+                      dateText: dueDate,
+                      taskId: taskTitle,
+                      taskColor:
+                          Colors.grey, // Set default color or specify as needed
+                    );
+                    // Dispatch an event to the TaskBloc to add the task
+                    context
+                        .read<TaskBloc>()
+                        .add(CreateTask(task: newTask)); // Dispatch the event
 
-                // Pass the new task back to the Todo List page
-                Navigator.pop(context, newTask);
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEE6F57), // Background color
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
+                    // Clear the input fields
+                    taskTitleController.clear();
+                    dueDateController.clear();
+                    descriptionController.clear();
+
+                    // Pass the new task back to the Todo List page
+                    // Navigator.pop(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFEE6F57), // Background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  minimumSize: const Size(180, 50), // Adjust the size
+                ),
+                child: const Text(
+                  'Add Task',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-              minimumSize: const Size(180, 50), // Adjust the size
-            ),
-            child: const Text(
-              'Add Task',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

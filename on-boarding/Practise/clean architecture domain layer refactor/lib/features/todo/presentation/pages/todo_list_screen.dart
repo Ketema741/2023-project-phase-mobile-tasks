@@ -1,38 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
 
-class TodoList extends StatefulWidget {
-  const TodoList({Key? key}) : super(key: key);
+import '../bloc/task_bloc.dart';
 
-  @override
-  State<TodoList> createState() => _TodoListState();
-}
+class TodoList extends StatelessWidget {
+  TodoList({Key? key}) : super(key: key);
 
-class _TodoListState extends State<TodoList> {
-  List<TaskModel> tasks = [
-    const TaskModel(
-      iconText: 'U',
-      titleText: 'UI/UX APP Design',
-      descriptionText: 'UI/UX APP Design',
-      dateText: 'April, 29, 2023',
-      taskId: '1',
-      taskColor: Colors.red,
-      isCompleted: true,
-    ),
-    const TaskModel(
-      iconText: 'P',
-      titleText: 'Project Planning',
-      descriptionText: 'UI/UX APP Design',
-      dateText: 'May, 15, 2023',
-      taskId: '2',
-      taskColor: Colors.green,
-      isCompleted: false,
-    ),
-  ];
-
-  Map<int, bool> showIconsMap = {}; // Map to track showIcons for each task
-
+  // final List<TaskModel> tasks = [
+  //   const TaskModel(
+  //     iconText: 'U',
+  //     titleText: 'UI/UX APP Design',
+  //     descriptionText: 'UI/UX APP Design',
+  //     dateText: 'April, 29, 2023',
+  //     taskId: '1',
+  //     taskColor: Colors.red,
+  //     isCompleted: true,
+  //   ),
+  //   const TaskModel(
+  //     iconText: 'P',
+  //     titleText: 'Project Planning',
+  //     descriptionText: 'UI/UX APP Design',
+  //     dateText: 'May, 15, 2023',
+  //     taskId: '2',
+  //     taskColor: Colors.green,
+  //     isCompleted: false,
+  //   ),
+  // ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,28 +103,38 @@ class _TodoListState extends State<TodoList> {
   }
 
   Widget _buildTaskList() {
-    return Expanded(
-      child: ListView.separated(
-        itemCount: tasks.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
-        itemBuilder: (context, index) {
-          return _buildTaskItem(tasks[index], index, deleteFunction: (context) => deleteTask(index));
-        },
-      ),
+    return BlocConsumer<TaskBloc, TaskState>(
+      listener: (context, state) {
+        //  implement listener
+      },
+      builder: (context, state) {
+        List<TaskModel> loadedTasks;
+        if (state is TaskLoaded && state.tasks.isNotEmpty) {
+           loadedTasks = state.tasks;
+        } else {
+          return const Center(
+            child: Text("No task"),
+          );
+        }
+        return Expanded(
+          child: ListView.separated(
+            itemCount: loadedTasks.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 10),
+            itemBuilder: (context, index) {
+              return _buildTaskItem(loadedTasks[index], index,
+                  deleteFunction: (context) => deleteTask(index));
+            },
+          ),
+        );
+      },
     );
   }
 
   bool isExpanded = false;
-  Widget _buildTaskItem(TaskModel task, int index, {required Function(dynamic context) deleteFunction}) {
+  Widget _buildTaskItem(TaskModel task, int index,
+      {required Function(dynamic context) deleteFunction}) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          showIconsMap[index] = !(showIconsMap[index] ?? false);
-        });
-        setState(() {
-          isExpanded = !isExpanded;
-        });
-      },
+      onTap: () {},
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),
@@ -146,7 +151,6 @@ class _TodoListState extends State<TodoList> {
               backgroundColor: Colors.blueAccent,
               borderRadius: BorderRadius.circular(12),
             ),
-           
           ],
         ),
         child: Container(
@@ -162,7 +166,12 @@ class _TodoListState extends State<TodoList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildTaskInfo(task.iconText, task.isCompleted, task.titleText, onChanged:(value) => checkBoxChanged(value, index),),
+              _buildTaskInfo(
+                task.iconText,
+                task.isCompleted,
+                task.titleText,
+                onChanged: (value) => checkBoxChanged(value, index),
+              ),
               const SizedBox(width: 20),
               _buildDateInfo(task.dateText, task.taskColor),
               // if (showIconsMap[index] ?? false)
@@ -210,25 +219,26 @@ class _TodoListState extends State<TodoList> {
     );
   }
 
-  Widget _buildTaskInfo(String iconText, bool isComleted, String titleText,  {required Function(dynamic value) onChanged}) {
+  Widget _buildTaskInfo(String iconText, bool isComleted, String titleText,
+      {required Function(dynamic value) onChanged}) {
     return SizedBox(
       width: 200,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Checkbox(
-                value: isComleted,
-                onChanged: onChanged,
-                activeColor: Colors.black,
-              ),
+            value: isComleted,
+            onChanged: onChanged,
+            activeColor: Colors.black,
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               titleText,
               style: TextStyle(
                 decoration: isComleted
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none,
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
@@ -282,9 +292,6 @@ class _TodoListState extends State<TodoList> {
             final newTask =
                 await Navigator.of(context).pushNamed('/create-task');
             if (newTask != null && newTask is TaskModel) {
-              setState(() {
-                tasks.add(newTask);
-              });
               // Add the new task to the tasks list
             }
           },
@@ -307,8 +314,8 @@ class _TodoListState extends State<TodoList> {
       ],
     );
   }
-  
+
   deleteTask(int index) {}
-  
+
   checkBoxChanged(value, int index) {}
 }

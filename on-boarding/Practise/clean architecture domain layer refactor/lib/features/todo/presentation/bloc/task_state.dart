@@ -10,6 +10,7 @@ sealed class TaskState extends Equatable {
 
   @override
   List<Object> get props => [];
+
 }
 
 final class TaskLoading extends TaskState {}

@@ -27,7 +27,7 @@ class TaskModel extends TaskEntity {
         descriptionText: json['descriptionText'],
         taskId: json['taskId'],
         dateText: json['dateText'],
-        taskColor: json['taskColor'],
+        taskColor: Color(json['taskColor']),
         isCompleted: json['isCompleted'],
       );
 
