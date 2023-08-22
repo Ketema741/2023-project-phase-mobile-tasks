@@ -8,26 +8,6 @@ import '../bloc/task_bloc.dart';
 class TodoList extends StatelessWidget {
   TodoList({Key? key}) : super(key: key);
 
-  // final List<TaskModel> tasks = [
-  //   const TaskModel(
-  //     iconText: 'U',
-  //     titleText: 'UI/UX APP Design',
-  //     descriptionText: 'UI/UX APP Design',
-  //     dateText: 'April, 29, 2023',
-  //     taskId: '1',
-  //     taskColor: Colors.red,
-  //     isCompleted: true,
-  //   ),
-  //   const TaskModel(
-  //     iconText: 'P',
-  //     titleText: 'Project Planning',
-  //     descriptionText: 'UI/UX APP Design',
-  //     dateText: 'May, 15, 2023',
-  //     taskId: '2',
-  //     taskColor: Colors.green,
-  //     isCompleted: false,
-  //   ),
-  // ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

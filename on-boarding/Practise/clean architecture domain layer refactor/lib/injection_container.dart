@@ -13,6 +13,8 @@ import 'features/todo/domain/usecases/get_task.dart';
 import 'features/todo/domain/usecases/get_tasks.dart';
 import 'features/todo/domain/usecases/update_task.dart';
 import 'features/todo/presentation/bloc/task_bloc.dart';
+import 'package:http/http.dart' as http;
+
 
 final GetIt sl = GetIt.instance;
 
@@ -37,33 +39,32 @@ Future<void> init() async {
     ),
   );
 
-  //! data sources
+  // data sources
   sl.registerLazySingleton<LocalDataSource>(
     () => LocalDataSourceImpl(
       sharedPreferences: sl(),
     ),
   );
 
-  //! External
+  // External
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
+  sl.registerLazySingleton(() => http.Client());
+
   sl.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker(),
   );
 
-  //! Repository
+  // Repository
   sl.registerLazySingleton<TaskRepository>(() => TaskRepositoryImpl(
         localDataSource: sl(),
         networkInfo: sl(),
       ));
   sl.registerLazySingleton<RemoteDataSource>(
-    () => RemoteDataSourceImp(
-      sharedPreferences: sl(),
-    ),
+    () => RemoteDataSourceImp(client: sl()),
   );
 
-
-  //! Register your bloc
+  // Register your bloc
   sl.registerFactory<TaskBloc>(() => TaskBloc(
         sl<GetTasksUseCase>(),
         sl<GetTaskUseCase>(),
