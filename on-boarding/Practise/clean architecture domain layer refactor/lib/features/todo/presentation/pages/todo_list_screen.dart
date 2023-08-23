@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:layout_basics/features/todo/data/models/task_model.dart';
+import 'package:layout_basics/features/todo/presentation/widgets/search_bar.dart';
 
 import '../bloc/task_bloc.dart';
 
+// ignore: must_be_immutable
 class TodoList extends StatelessWidget {
   TodoList({Key? key}) : super(key: key);
 
@@ -20,7 +22,8 @@ class TodoList extends StatelessWidget {
             const SizedBox(height: 20.0),
             _buildHeader(context),
             const SizedBox(height: 10.0),
-            _buildImage(),
+            // _buildImage(),
+            const SearchBarWidget(),
             const SizedBox(height: 4.0),
             const Text(
               'Task List',
@@ -90,7 +93,7 @@ class TodoList extends StatelessWidget {
       builder: (context, state) {
         List<TaskModel> loadedTasks;
         if (state is TaskLoaded && state.tasks.isNotEmpty) {
-           loadedTasks = state.tasks;
+          loadedTasks = state.tasks;
         } else {
           return const Center(
             child: Text("No task"),
@@ -154,44 +157,6 @@ class TodoList extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               _buildDateInfo(task.dateText, task.taskColor),
-              // if (showIconsMap[index] ?? false)
-              //   Stack(
-              //     children: [
-              //       Column(
-              //         children: [
-              //           IconButton(
-              //             onPressed: () async {
-              //               final editedTask = await Navigator.pushNamed(
-              //                   context, '/edit-task',
-              //                   arguments: task);
-
-              //               if (editedTask != null && editedTask is Task) {
-              //                 setState(() {
-              //                   // Find the task in the tasks list and update it
-              //                   int indexOfTask = tasks.indexWhere(
-              //                       (task) => task.taskId == editedTask.taskId);
-              //                   if (indexOfTask != -1) {
-              //                     debugPrint("here");
-              //                     tasks[indexOfTask] = editedTask;
-              //                   } else {
-              //                     debugPrint("not ear");
-              //                   }
-              //                 });
-              //               }
-              //             },
-              //             icon: const Icon(Icons.edit),
-              //           ),
-              //           IconButton(
-              //             onPressed: () {
-              //               Navigator.pushNamed(context, '/task-detail',
-              //                   arguments: task);
-              //             },
-              //             icon: const Icon(Icons.more_vert),
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
             ],
           ),
         ),

@@ -12,6 +12,14 @@ class LoadTasks extends TaskEvent {
   const LoadTasks({this.tasks = const <TaskModel>[]});
 }
 
+class FilterTasks extends TaskEvent {
+  final String query;
+  const FilterTasks({
+    required this.query,
+    List<TaskModel> tasks = const <TaskModel>[],
+  });
+}
+
 class LoadTask extends TaskEvent {
   final String id;
   const LoadTask({required this.id});

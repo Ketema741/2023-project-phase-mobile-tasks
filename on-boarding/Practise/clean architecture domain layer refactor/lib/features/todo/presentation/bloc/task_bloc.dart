@@ -33,6 +33,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<CreateTask>(_onCreateTask);
     on<UpdateTask>(_onUpdateTask);
     on<DeleteTask>(_onDeleteTask);
+    on<FilterTasks>(_onFilterTasks);
   }
 
   FutureOr<void> _onLoadTasks(LoadTasks event, Emitter<TaskState> emit) async {
@@ -50,6 +51,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       },
     );
   }
+
+  FutureOr<void> _onFilterTasks(
+    FilterTasks event,
+    Emitter<TaskState> emit,
+  ) async {
+    if (state is TaskLoaded) {
+      final filteredTasks = (state as TaskLoaded)
+          .tasks
+          .where((task) =>
+              task.titleText.toLowerCase().contains(event.query.toLowerCase()))
+          .toList();
+      emit(FilteredTasks(tasks: filteredTasks));
+    }
+  }
+  
 
   FutureOr<void> _onLoadTask(
       LoadTaskSingle event, Emitter<TaskState> emit) async {

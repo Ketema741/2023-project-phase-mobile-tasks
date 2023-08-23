@@ -22,6 +22,13 @@ final class TaskLoaded extends TaskState {
   @override
   List<Object> get props => [tasks];
 }
+final class FilteredTasks extends TaskState {
+  final List<TaskModel> tasks;
+  const FilteredTasks({required this.tasks });
+
+  @override
+  List<Object> get props => [tasks];
+}
 
 final class TaskLoadedSingle extends TaskState {
   final String id;
