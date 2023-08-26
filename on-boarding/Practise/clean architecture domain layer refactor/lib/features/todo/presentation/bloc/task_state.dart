@@ -10,24 +10,28 @@ sealed class TaskState extends Equatable {
 
   @override
   List<Object> get props => [];
-
 }
 
 final class TaskLoading extends TaskState {}
 
 final class TaskLoaded extends TaskState {
   final List<TaskModel> tasks;
-  const TaskLoaded({this.tasks = const <TaskModel>[]});
+  final List<TaskModel> filteredTasks;
+  const TaskLoaded({
+    this.tasks = const <TaskModel>[],
+    this.filteredTasks = const <TaskModel>[]
+  });
 
   @override
   List<Object> get props => [tasks];
 }
-final class FilteredTasks extends TaskState {
-  final List<TaskModel> tasks;
-  const FilteredTasks({required this.tasks });
+
+final class TaskFiltered extends TaskState {
+  final List<TaskModel> filteredTasks;
+  const TaskFiltered({required this.filteredTasks});
 
   @override
-  List<Object> get props => [tasks];
+  List<Object> get props => [filteredTasks];
 }
 
 final class TaskLoadedSingle extends TaskState {
@@ -48,6 +52,7 @@ class TaskCreated extends TaskState {
 }
 
 class TaskDeleted extends TaskState {}
+
 class TaskUpdated extends TaskState {
   final TaskModel updatedTask;
 
@@ -56,7 +61,6 @@ class TaskUpdated extends TaskState {
   @override
   List<Object> get props => [updatedTask];
 }
-
 
 final class TaskError extends TaskState {
   final String message;

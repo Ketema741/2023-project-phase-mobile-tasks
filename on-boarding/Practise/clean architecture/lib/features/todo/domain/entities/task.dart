@@ -1,24 +1,35 @@
+import 'dart:ui';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class Todo extends Equatable {
+class TaskEntity extends Equatable {
   final String iconText;
   final String titleText;
-  final String? descriptionText;
+  final String descriptionText;
   final String dateText;
-  final Color taskColor;
   final String taskId;
+  final Color taskColor;
+  final bool isCompleted;
 
-  const Todo({
+  const TaskEntity({
     required this.iconText,
     required this.titleText,
     required this.descriptionText,
     required this.dateText,
     required this.taskId,
-    Color? taskColor, // Make taskColor nullable
-  }) : taskColor = taskColor ?? Colors.grey;
+    Color? taskColor, // Default value for taskColor
+    bool? isCompleted, // Default value for isCompleted
+  })  : taskColor = taskColor ?? const Color.fromARGB(0, 23, 55, 55), // Assign default value if not provided
+        isCompleted = isCompleted ?? false; // Assign default value if not provided
 
   @override
-  List<Object?> get props =>
-      throw UnimplementedError(); // Set a default color if none is provided
+  List<Object?> get props => [
+        iconText,
+        titleText,
+        descriptionText,
+        dateText,
+        taskId,
+        taskColor,
+        isCompleted,
+      ];
 }

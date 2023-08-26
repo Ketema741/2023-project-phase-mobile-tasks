@@ -16,11 +16,6 @@ part 'task_event.dart';
 part 'task_state.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
-  final GetTasksUseCase getTasks;
-  final GetTaskUseCase getTask;
-  final CreateTaskUseCase createTask;
-  final DeleteTaskUseCase deleteTask;
-  final UpdateTaskUseCase updateTask;
   TaskBloc(
     this.getTasks,
     this.getTask,
@@ -34,6 +29,25 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<UpdateTask>(_onUpdateTask);
     on<DeleteTask>(_onDeleteTask);
     on<FilterTasks>(_onFilterTasks);
+  }
+
+  final CreateTaskUseCase createTask;
+  final DeleteTaskUseCase deleteTask;
+  final GetTaskUseCase getTask;
+  final GetTasksUseCase getTasks;
+  final UpdateTaskUseCase updateTask;
+
+  String mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return 'Server Error';
+      case ConnectionFailure:
+        return 'Connection Error';
+      case DatabaseFailure:
+        return 'Database Error';
+      default:
+        return 'An unexpected error occurred';
+    }
   }
 
   FutureOr<void> _onLoadTasks(LoadTasks event, Emitter<TaskState> emit) async {
@@ -56,16 +70,23 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     FilterTasks event,
     Emitter<TaskState> emit,
   ) async {
-    if (state is TaskLoaded) {
-      final filteredTasks = (state as TaskLoaded)
-          .tasks
-          .where((task) =>
-              task.titleText.toLowerCase().contains(event.query.toLowerCase()))
-          .toList();
-      emit(FilteredTasks(tasks: filteredTasks));
-    }
+    final tasksEither = await getTasks(NoParams()); // Call the use case
+
+    tasksEither.fold(
+      (failure) {
+        final errorMessage = mapFailureToMessage(failure);
+        emit(TaskError(errorMessage)); // Emit error state
+      },
+      (tasks) {
+        emit(TaskLoaded(tasks: tasks)); // Emit success state with tasks
+      },
+    ); 
+    final originalTasks = (state as TaskLoaded).tasks;
+    final filteredTasks = originalTasks.where((task) {
+      return task.titleText.toLowerCase().contains(event.query.toLowerCase());
+    }).toList();
+    emit(TaskLoaded(filteredTasks: filteredTasks));
   }
-  
 
   FutureOr<void> _onLoadTask(
       LoadTaskSingle event, Emitter<TaskState> emit) async {
@@ -138,18 +159,5 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         emit(TaskUpdated(updatedTask: event.task)); // Emit success state
       },
     );
-  }
-
-  String mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return 'Server Error';
-      case ConnectionFailure:
-        return 'Connection Error';
-      case DatabaseFailure:
-        return 'Database Error';
-      default:
-        return 'An unexpected error occurred';
-    }
   }
 }

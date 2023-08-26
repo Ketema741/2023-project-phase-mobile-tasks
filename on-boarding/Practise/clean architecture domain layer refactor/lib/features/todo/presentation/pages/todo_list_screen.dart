@@ -5,6 +5,7 @@ import 'package:layout_basics/features/todo/data/models/task_model.dart';
 import 'package:layout_basics/features/todo/presentation/widgets/search_bar.dart';
 
 import '../bloc/task_bloc.dart';
+import '../widgets/tags_widget.dart';
 
 // ignore: must_be_immutable
 class TodoList extends StatelessWidget {
@@ -22,18 +23,27 @@ class TodoList extends StatelessWidget {
             const SizedBox(height: 20.0),
             _buildHeader(context),
             const SizedBox(height: 10.0),
-            // _buildImage(),
             const SearchBarWidget(),
-            const SizedBox(height: 4.0),
-            const Text(
-              'Task List',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            const TagButtonListWidget(tagNames: ["Sport", "Education"]),
+            const SizedBox(height: 10.0),
             const SizedBox(height: 20.0),
-            _buildTaskList(),
+            BlocConsumer<TaskBloc, TaskState>(
+              listener: (context, state) {
+                //  implement listener
+              },
+              builder: (context, state) {
+                // Display filtered tasks
+                if (state is TaskLoaded && state.filteredTasks.isNotEmpty) {
+                  return _buildTaskList(state.filteredTasks);
+                } else if (state is TaskLoaded && state.tasks.isNotEmpty) {
+                  // Display loaded tasks
+                  return _buildTaskList(state.tasks);
+                } else {
+                  // Display "No task" message
+                  return const Center(child: Text("No task"));
+                }
+              },
+            ),
             const SizedBox(height: 20.0),
             _buildCreateTaskButton(context),
           ],
@@ -73,43 +83,16 @@ class TodoList extends StatelessWidget {
     );
   }
 
-  Widget _buildImage() {
-    return Container(
-      alignment: Alignment.center,
-      child: Image.asset(
-        'images/todo_list.jpeg',
-        width: 483,
-        height: 150,
-        fit: BoxFit.contain,
+  Widget _buildTaskList(List<TaskModel> tasks) {
+    return Expanded(
+      child: ListView.separated(
+        itemCount: tasks.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        itemBuilder: (context, index) {
+          return _buildTaskItem(tasks[index], index,
+              deleteFunction: (context) => deleteTask(index));
+        },
       ),
-    );
-  }
-
-  Widget _buildTaskList() {
-    return BlocConsumer<TaskBloc, TaskState>(
-      listener: (context, state) {
-        //  implement listener
-      },
-      builder: (context, state) {
-        List<TaskModel> loadedTasks;
-        if (state is TaskLoaded && state.tasks.isNotEmpty) {
-          loadedTasks = state.tasks;
-        } else {
-          return const Center(
-            child: Text("No task"),
-          );
-        }
-        return Expanded(
-          child: ListView.separated(
-            itemCount: loadedTasks.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 10),
-            itemBuilder: (context, index) {
-              return _buildTaskItem(loadedTasks[index], index,
-                  deleteFunction: (context) => deleteTask(index));
-            },
-          ),
-        );
-      },
     );
   }
 

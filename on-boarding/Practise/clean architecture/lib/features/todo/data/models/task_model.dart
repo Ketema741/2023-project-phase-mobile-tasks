@@ -1,22 +1,44 @@
 import 'package:flutter/material.dart';
 
-class Task {
-  final String iconText;
-  final String titleText;
-  final String? descriptionText;
-  final String dateText;
-  final Color taskColor;
-  final String taskId;
-  final bool isCompleted;
+import '../../domain/entities/task.dart';
 
-  Task({
-    required this.iconText,
-    required this.titleText,
-    required this.descriptionText,
-    required this.dateText,
-    required this.taskId,
+class TaskModel extends TaskEntity {
+  const TaskModel({
+    required String iconText,
+    required String titleText,
+    required String descriptionText,
+    required String dateText,
+    required String taskId,
     Color? taskColor,
     bool? isCompleted,
-  })  : taskColor = taskColor ?? Colors.grey,
-        isCompleted = isCompleted ?? false; // Set a default color if none is provided
+  }) : super(
+          iconText: iconText,
+          titleText: titleText,
+          descriptionText: descriptionText,
+          taskId: taskId,
+          dateText: dateText,
+          taskColor: taskColor ?? Colors.grey,
+          isCompleted: isCompleted ?? false,
+        );
+
+  factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
+        iconText: json['iconText'],
+        titleText: json['titleText'],
+        descriptionText: json['descriptionText'],
+        taskId: json['taskId'],
+        dateText: json['dateText'],
+        taskColor: json['taskColor'],
+        isCompleted: json['isCompleted'],
+      );
+  
+  Map < String, dynamic > toJson() => {
+    
+    'iconText': iconText,
+    'titleText': titleText,
+    'descriptionText': descriptionText,
+    'taskId': taskId,
+    'dateText': dateText,
+    'taskColor': taskColor,
+    'isCompleted': isCompleted,
+  };
 }

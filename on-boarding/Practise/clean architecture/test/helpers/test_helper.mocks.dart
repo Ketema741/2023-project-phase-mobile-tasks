@@ -12,10 +12,10 @@ import 'package:http/http.dart' as _i4;
 import 'package:layout_basics/core/error/failures.dart' as _i6;
 import 'package:layout_basics/features/todo/data/datasources/local_data_source.dart'
     as _i8;
-import 'package:layout_basics/features/todo/domain/entities/task.dart' as _i7;
+import 'package:layout_basics/features/todo/data/models/task_model.dart' as _i7;
 import 'package:layout_basics/features/todo/domain/repositories/task_repository.dart'
     as _i3;
-import 'package:layout_basics/features/todo/domain/usecases/get_tasks_usecase.dart'
+import 'package:layout_basics/features/todo/domain/usecases/get_tasks.dart'
     as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -81,21 +81,40 @@ class MockTaskRepository extends _i1.Mock implements _i3.TaskRepository {
   }
 
   @override
-  _i5.Future<_i2.Either<_i6.Failure, List<_i7.Todo>>> getTasks() =>
+  _i5.Future<_i2.Either<_i6.Failure, List<_i7.TaskModel>>> getTasks() =>
       (super.noSuchMethod(
         Invocation.method(
           #getTasks,
           [],
         ),
-        returnValue: _i5.Future<_i2.Either<_i6.Failure, List<_i7.Todo>>>.value(
-            _FakeEither_0<_i6.Failure, List<_i7.Todo>>(
+        returnValue:
+            _i5.Future<_i2.Either<_i6.Failure, List<_i7.TaskModel>>>.value(
+                _FakeEither_0<_i6.Failure, List<_i7.TaskModel>>(
           this,
           Invocation.method(
             #getTasks,
             [],
           ),
         )),
-      ) as _i5.Future<_i2.Either<_i6.Failure, List<_i7.Todo>>>);
+      ) as _i5.Future<_i2.Either<_i6.Failure, List<_i7.TaskModel>>>);
+  @override
+  dynamic updateTask(_i7.TaskModel? task) =>
+      super.noSuchMethod(Invocation.method(
+        #updateTask,
+        [task],
+      ));
+  @override
+  dynamic deleteTask(_i7.TaskModel? task) =>
+      super.noSuchMethod(Invocation.method(
+        #deleteTask,
+        [task],
+      ));
+  @override
+  dynamic addTask(_i7.TaskModel? newTask) =>
+      super.noSuchMethod(Invocation.method(
+        #addTask,
+        [newTask],
+      ));
 }
 
 /// A class which mocks [LocalDataSource].
@@ -107,15 +126,15 @@ class MockLocalDataSource extends _i1.Mock implements _i8.LocalDataSource {
   }
 
   @override
-  _i5.Future<List<_i7.Todo>> getTasks() => (super.noSuchMethod(
+  _i5.Future<List<_i7.TaskModel>> getTasks() => (super.noSuchMethod(
         Invocation.method(
           #getTasks,
           [],
         ),
-        returnValue: _i5.Future<List<_i7.Todo>>.value(<_i7.Todo>[]),
-      ) as _i5.Future<List<_i7.Todo>>);
+        returnValue: _i5.Future<List<_i7.TaskModel>>.value(<_i7.TaskModel>[]),
+      ) as _i5.Future<List<_i7.TaskModel>>);
   @override
-  _i5.Future<void> addTask(_i7.Todo? task) => (super.noSuchMethod(
+  _i5.Future<void> addTask(_i7.TaskModel? task) => (super.noSuchMethod(
         Invocation.method(
           #addTask,
           [task],
@@ -124,7 +143,7 @@ class MockLocalDataSource extends _i1.Mock implements _i8.LocalDataSource {
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
   @override
-  _i5.Future<void> updateTask(_i7.Todo? task) => (super.noSuchMethod(
+  _i5.Future<void> updateTask(_i7.TaskModel? task) => (super.noSuchMethod(
         Invocation.method(
           #updateTask,
           [task],
@@ -133,7 +152,7 @@ class MockLocalDataSource extends _i1.Mock implements _i8.LocalDataSource {
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
   @override
-  _i5.Future<void> deleteTask(_i7.Todo? task) => (super.noSuchMethod(
+  _i5.Future<void> deleteTask(_i7.TaskModel? task) => (super.noSuchMethod(
         Invocation.method(
           #deleteTask,
           [task],
@@ -160,21 +179,22 @@ class MockGetTasksUseCase extends _i1.Mock implements _i9.GetTasksUseCase {
         ),
       ) as _i3.TaskRepository);
   @override
-  _i5.Future<_i2.Either<_i6.Failure, List<_i7.Todo>>> execute() =>
+  _i5.Future<_i2.Either<_i6.Failure, List<_i7.TaskModel>>> execute() =>
       (super.noSuchMethod(
         Invocation.method(
           #execute,
           [],
         ),
-        returnValue: _i5.Future<_i2.Either<_i6.Failure, List<_i7.Todo>>>.value(
-            _FakeEither_0<_i6.Failure, List<_i7.Todo>>(
+        returnValue:
+            _i5.Future<_i2.Either<_i6.Failure, List<_i7.TaskModel>>>.value(
+                _FakeEither_0<_i6.Failure, List<_i7.TaskModel>>(
           this,
           Invocation.method(
             #execute,
             [],
           ),
         )),
-      ) as _i5.Future<_i2.Either<_i6.Failure, List<_i7.Todo>>>);
+      ) as _i5.Future<_i2.Either<_i6.Failure, List<_i7.TaskModel>>>);
 }
 
 /// A class which mocks [Client].

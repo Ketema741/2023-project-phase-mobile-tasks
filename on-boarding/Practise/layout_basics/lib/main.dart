@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'create_task.dart';
+import 'package:layout_basics/route_generator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: MyHomePage(),
+      initialRoute: "/todo-list",
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
@@ -29,19 +31,19 @@ class MyHomePage extends StatelessWidget {
           Image.asset(
             'images/drawing.jpeg',
             width: 483, // Adjusted width
-            height: 320 , // Adjusted height
+            height: 320, // Adjusted height
             fit: BoxFit.contain,
           ),
           const SizedBox(height: 120), // Adjust the spacing
           ElevatedButton(
             onPressed: () {
-              // onPressed logic will be here
+              Navigator.of(context)
+                  .pushNamed('create-task', arguments: "hello ");
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                
               ),
               minimumSize: const Size(256, 50), // Adjust the size
             ),

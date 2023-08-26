@@ -1,24 +1,25 @@
-import 'package:layout_basics/features/todo/domain/entities/task.dart';
+
+import '../models/task_model.dart';
 
 abstract class LocalDataSource {
-  Future<List<Todo>> getTasks();
-  Future<void> addTask(Todo task);
-  Future<void> updateTask(Todo task);
-  Future<void> deleteTask(Todo task);
+  Future<List<TaskModel>> getTasks();
+  Future<void> addTask(TaskModel task);
+  Future<void> updateTask(TaskModel task);
+  Future<void> deleteTask(TaskModel task);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
   @override
-  Future<List<Todo>> getTasks() async {
-    List<Todo> tasks = [
-      const Todo(
+  Future<List<TaskModel>> getTasks() async {
+    List<TaskModel> tasks = [
+      const TaskModel(
         iconText: 'U',
         titleText: 'UI/UX APP Design',
         descriptionText: 'UI/UX APP Design',
         dateText: 'April, 29, 2023',
         taskId: '1',
       ),
-      const Todo(
+      const TaskModel(
         iconText: 'P',
         titleText: 'Project Planning',
         descriptionText: 'UI/UX APP Design',
@@ -30,17 +31,17 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<void> addTask(Todo task) async {
+  Future<void> addTask(TaskModel task) async {
     // Implement adding a task to the local database or storage
   }
 
   @override
-  Future<void> updateTask(Todo task) async {
+  Future<void> updateTask(TaskModel task) async {
     // Implement updating a task in the local database or storage
   }
 
   @override
-  Future<void> deleteTask(Todo task) async {
+  Future<void> deleteTask(TaskModel task) async {
     // Implement deleting a task from the local database or storage
   }
 }

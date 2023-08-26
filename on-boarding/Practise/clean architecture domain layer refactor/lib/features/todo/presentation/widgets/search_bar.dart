@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:layout_basics/features/todo/presentation/bloc/task_bloc.dart';
 
-import '../../../../core/utils/app_colors.dart';
+class SearchBarWidget extends StatefulWidget {
+  const SearchBarWidget({Key? key}) : super(key: key);
 
-class SearchBarWidget  extends StatelessWidget {
-  const SearchBarWidget({super.key});
+  @override
+  // ignore: library_private_types_in_public_api
+  _SearchBarWidgetState createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  TextEditingController queryController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +22,14 @@ class SearchBarWidget  extends StatelessWidget {
           child: Container(
             width: 379,
             height: 70.5,
-            padding:const
-                EdgeInsets.only(left: 15), // Left padding for the text field
+            padding: const EdgeInsets.only(left: 15),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.iconGrey.withOpacity(0.1)),
-              color: AppColors.whiteColor,
-              borderRadius: BorderRadius.circular(
-                  10), // Rounded corners of the container
+              border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.iconGrey.withOpacity(0.1), // Shadow color
+                  color: Colors.grey.withOpacity(0.1),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: const Offset(0, 2),
@@ -30,49 +37,49 @@ class SearchBarWidget  extends StatelessWidget {
               ],
             ),
             child: TextField(
+              controller: queryController,
               decoration: InputDecoration(
-                hintText: 'Search articles...',
+                hintText: 'Search tasks...',
                 hintStyle: TextStyle(
-                  color: Theme.of(context)
-                      .hintColor, // Extra light color for the hint text
+                  color: Theme.of(context).hintColor,
                   fontSize: 15,
-                  fontWeight: FontWeight
-                      .w300, // Extra light font weight for the hint text
+                  fontWeight: FontWeight.w300,
                 ),
-                border:
-                    InputBorder.none, // Remove border around the input field
+                border: InputBorder.none,
               ),
             ),
           ),
         ),
         Positioned(
           right: 0,
-          // height and width of the button
           width: 52,
           height: 70.5,
           child: ElevatedButton(
             onPressed: () {
-              // Perform search action here
+              _filterTasks(context); // Clear the search query
             },
             style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 16, horizontal: 16), // Padding for the button
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(
-                    10), // Rounded corners of the button
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
             child: const Icon(
-              Icons.search, // Search icon
-              color: AppColors.whiteColor, // Color of the search icon
-              size: 35, // Size of the search icon
+              Icons.search, // Clear icon
+              color: Colors.white,
+              size: 24,
             ),
           ),
         ),
       ],
     );
   }
+
+  void _filterTasks(BuildContext context) {
+    if (queryController.text.isNotEmpty ) {
+      BlocProvider.of<TaskBloc>(context).add(FilterTasks(query: queryController.text));
+    } else {
+      BlocProvider.of<TaskBloc>(context).add(const LoadTasks());
+    }
+  }
 }
-
-
-

@@ -10,8 +10,8 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  List<Task> tasks = [
-    Task(
+  List<TaskModel> tasks = [
+    const TaskModel(
       iconText: 'U',
       titleText: 'UI/UX APP Design',
       descriptionText: 'UI/UX APP Design',
@@ -20,7 +20,7 @@ class _TodoListState extends State<TodoList> {
       taskColor: Colors.red,
       isCompleted: true,
     ),
-    Task(
+    const TaskModel(
       iconText: 'P',
       titleText: 'Project Planning',
       descriptionText: 'UI/UX APP Design',
@@ -120,7 +120,7 @@ class _TodoListState extends State<TodoList> {
   }
 
   bool isExpanded = false;
-  Widget _buildTaskItem(Task task, int index, {required Function(dynamic context) deleteFunction}) {
+  Widget _buildTaskItem(TaskModel task, int index, {required Function(dynamic context) deleteFunction}) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -281,7 +281,7 @@ class _TodoListState extends State<TodoList> {
           onPressed: () async {
             final newTask =
                 await Navigator.of(context).pushNamed('/create-task');
-            if (newTask != null && newTask is Task) {
+            if (newTask != null && newTask is TaskModel) {
               setState(() {
                 tasks.add(newTask);
               });

@@ -1,15 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:layout_basics/features/todo/domain/entities/task.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../data/models/task_model.dart';
 
 abstract class TaskRepository {
-  Future<Either<Failure, List<Todo>>> getTasks();
+  Future<Either<Failure, List<TaskModel>>> getTasks();
+  Future<Either<Failure, TaskModel>> getTask({required id});
 
-  updateTask(Todo task) {}
+  updateTask(TaskModel task) {}
 
-  deleteTask(Todo task) {}
+  deleteTask(TaskModel task) {}
 
-  addTask(Todo newTask) {}
+  addTask(TaskModel newTask) {}
 
 }

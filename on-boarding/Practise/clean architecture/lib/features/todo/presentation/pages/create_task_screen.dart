@@ -215,7 +215,7 @@ class CreateTask extends StatelessWidget {
                   dueDate.isNotEmpty &&
                   description.isNotEmpty) {
                 String iconText = taskTitle[0];
-                Task newTask = Task(
+                TaskModel newTask = TaskModel(
                   iconText: iconText, // You can set appropriate values here
                   titleText: taskTitle,
                   descriptionText: description,

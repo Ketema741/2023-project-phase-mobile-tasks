@@ -64,6 +64,8 @@ flutter:
     - images/pic2.jpg
     - images/pic3.jpg
     - images/pic4.jpg
+    - images/todo_list.jpeg
+    - images/task_detail.jpeg
     - images/drawing.jpeg
     - images/design_1.png
     - images/design_2.png
