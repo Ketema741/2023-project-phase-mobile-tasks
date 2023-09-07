@@ -11,5 +11,5 @@ abstract class TaskRepository {
 
   Future<Either<Failure, String>> deleteTask(String id);
 
-  Future<Either<Failure, TaskModel>> createTask(TaskModel newTask);
+  Future<Either<Failure, Task>> createTask(TaskModel newTask);
 }

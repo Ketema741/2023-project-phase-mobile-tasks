@@ -80,13 +80,39 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       (tasks) {
         emit(TaskLoaded(tasks: tasks)); // Emit success state with tasks
       },
-    ); 
+    );
     final originalTasks = (state as TaskLoaded).tasks;
     final filteredTasks = originalTasks.where((task) {
       return task.titleText.toLowerCase().contains(event.query.toLowerCase());
     }).toList();
     emit(TaskLoaded(filteredTasks: filteredTasks));
   }
+
+  // FutureOr<void> _onFilterArticles(
+//   FilterArticles event,
+//   Emitter<ArticleState> emit,
+// ) async {
+//   final articlesEither = await getArticles(NoParams());
+
+//   articlesEither.fold(
+//     (failure) {
+//       final errorMessage = mapFailureToMessage(failure);
+//       emit(ArticleError(errorMessage));
+//     },
+//     (articles) {
+//       emit(ArticleLoaded(articles: articles));
+//     },
+//   );
+
+//   final originalArticles = (state as ArticleLoaded).articles;
+//   final filteredArticles = originalArticles.where((article) {
+  // Check if any tag contains the query (case-insensitive)
+//     return article.tags.any((tag) =>
+//         tag.toLowerCase().contains(event.query.toLowerCase()));
+//   }).toList();
+
+//   emit(ArticleLoaded(filteredArticles: filteredArticles));
+// }
 
   FutureOr<void> _onLoadTask(
       LoadTaskSingle event, Emitter<TaskState> emit) async {
